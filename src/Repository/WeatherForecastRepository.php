@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\WeatherForecast;
+use App\Module\Weather\Filter\WeatherForecastFilter;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -21,28 +22,31 @@ class WeatherForecastRepository extends ServiceEntityRepository
         parent::__construct($registry, WeatherForecast::class);
     }
 
-//    /**
-//     * @return WeatherForecast[] Returns an array of WeatherForecast objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('w')
-//            ->andWhere('w.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('w.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function findOneByFilter(WeatherForecastFilter $filter): ?WeatherForecast
+    {
+        $queryBuilder = $this->createQueryBuilder('w');
 
-//    public function findOneBySomeField($value): ?WeatherForecast
-//    {
-//        return $this->createQueryBuilder('w')
-//            ->andWhere('w.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        if ($filter->createdAt) {
+            $queryBuilder
+                ->andWhere('w.created_at BETWEEN :start_date AND :end_date')
+                ->setParameter('start_date', $filter->createdAt->format('Y-m-d 00:00:00'))
+                ->setParameter('end_date', $filter->createdAt->format('Y-m-d 23:59:59'));
+        }
+
+        if ($filter->country) {
+            $queryBuilder
+                ->andWhere('w.country = :country')
+                ->setParameter('country', $filter->country->value);
+        }
+
+        if ($filter->city) {
+            $queryBuilder
+                ->andWhere('w.city = :city')
+                ->setParameter('city', $filter->city->value);
+        }
+
+        return $queryBuilder
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }
