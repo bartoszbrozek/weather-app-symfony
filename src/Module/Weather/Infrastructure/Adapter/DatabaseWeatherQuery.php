@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Module\Weather\Infrastructure;
+namespace App\Module\Weather\Infrastructure\Adapter;
 
 use App\Module\Weather\Contract\WeatherQuery;
 use App\Module\Weather\DTO\WeatherForecastData;

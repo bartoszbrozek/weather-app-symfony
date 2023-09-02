@@ -22,10 +22,11 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
-    app.weather.query.database:
-        class: App\Module\Weather\Infrastructure\DatabaseWeatherQuery
+    app.weather.query.adapter.database:
+        class: App\Module\Weather\Infrastructure\Adapter\DatabaseWeatherQuery
     
-    app.weather.query.open_weather_api:
-        class: App\Module\Weather\Infrastructure\OpenWeatherApiQuery
+    app.weather.query.adapter.open_weather_api:
+        public: true
+        class: App\Module\Weather\Infrastructure\Adapter\OpenWeatherApiQuery
         arguments:
             $apiKey: '%env(OPEN_WEATHER_MAP_API_KEY)%'
