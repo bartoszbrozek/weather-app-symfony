@@ -35,6 +35,7 @@ class FetchWeatherDataCommand extends Command
                 ),
                 [
                     'app.weather.query.adapter.open_weather_api',
+                    'app.weather.query.adapter.dummy',
                 ],
             );
 

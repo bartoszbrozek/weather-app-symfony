@@ -30,3 +30,7 @@ services:
         class: App\Module\Weather\Infrastructure\Adapter\OpenWeatherApiQuery
         arguments:
             $apiKey: '%env(OPEN_WEATHER_MAP_API_KEY)%'
+
+    app.weather.query.adapter.dummy:
+        public: true
+        class: App\Module\Weather\Infrastructure\Adapter\DummyWeatherQuery

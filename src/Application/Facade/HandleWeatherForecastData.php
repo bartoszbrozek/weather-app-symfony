@@ -55,8 +55,6 @@ final readonly class HandleWeatherForecastData
 
             $this->dbConnection->commit();
         } catch (Throwable $t) {
-
-            dd($t);
             $this->dbConnection->rollBack();
 
             throw $t;
