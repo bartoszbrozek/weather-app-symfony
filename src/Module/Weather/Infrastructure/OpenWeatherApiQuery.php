@@ -9,6 +9,7 @@ use App\Module\Weather\Filter\WeatherForecastFilter;
 use App\Module\Weather\ValueObject\City;
 use App\Module\Weather\ValueObject\Country;
 use Cmfcmf\OpenWeatherMap;
+use DateTimeImmutable;
 use GuzzleHttp\Psr7\HttpFactory;
 use Http\Adapter\Guzzle7\Client;
 use Throwable;
@@ -25,7 +26,7 @@ final readonly class OpenWeatherApiQuery implements WeatherQuery
             $weather = $this->client()->getWeather($filter->city->value, 'metric', 'en');
 
             return new WeatherForecastData(
-                dateTime: new \DateTime(),
+                dateTime: new DateTimeImmutable(),
                 city: new City($weather->city->name),
                 country: new Country($weather->city->country),
                 temperature: $weather->temperature->now->getValue(),

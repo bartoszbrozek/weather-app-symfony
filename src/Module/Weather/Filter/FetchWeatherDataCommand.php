@@ -3,6 +3,7 @@
 namespace App\Module\Weather\Filter;
 
 use App\Module\Weather\Contract\WeatherQuery;
+use App\Module\Weather\Contract\WeatherService;
 use App\Module\Weather\ValueObject\City;
 use App\Module\Weather\ValueObject\Country;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -21,6 +22,8 @@ class FetchWeatherDataCommand extends Command
     public function __construct(
         #[Autowire(service: 'app.weather.query.open_weather_api')]
         private readonly WeatherQuery $weatherQuery,
+
+        private readonly WeatherService $weatherService,
     )
     {
         parent::__construct();
@@ -36,8 +39,11 @@ class FetchWeatherDataCommand extends Command
                 )
             );
 
+            $this->weatherService->storeWeatherForecast($data);
+
             return Command::SUCCESS;
         } catch (\Throwable $t) {
+            dd ($t);
             return Command::INVALID;
         }
     }
