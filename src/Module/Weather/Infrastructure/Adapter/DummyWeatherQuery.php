@@ -21,4 +21,13 @@ final readonly class DummyWeatherQuery implements WeatherQuery
             temperature: (float)random_int(-25, 40),
         );
     }
+
+    /**
+     * @inheritDoc
+     * @throws Exception
+     */
+    public function getWeatherAverage(WeatherForecastFilter $filter): ?WeatherForecastData
+    {
+        return $this->getWeather($filter);
+    }
 }

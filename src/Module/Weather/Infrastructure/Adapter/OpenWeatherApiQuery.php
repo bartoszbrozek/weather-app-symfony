@@ -10,6 +10,7 @@ use App\Module\Weather\ValueObject\City;
 use App\Module\Weather\ValueObject\Country;
 use Cmfcmf\OpenWeatherMap;
 use DateTimeImmutable;
+use Exception;
 use GuzzleHttp\Psr7\HttpFactory;
 use Http\Adapter\Guzzle7\Client;
 use Throwable;
@@ -37,6 +38,15 @@ final readonly class OpenWeatherApiQuery implements WeatherQuery
                 previous: $t,
             );
         }
+    }
+
+    /**
+     * @inheritDoc
+     * @throws Exception
+     */
+    public function getWeatherAverage(WeatherForecastFilter $filter): ?WeatherForecastData
+    {
+        return $this->getWeather($filter);
     }
 
     private function client(): OpenWeatherMap

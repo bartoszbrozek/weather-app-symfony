@@ -56,13 +56,12 @@ final readonly class HandleWeatherForecastData
             }
             $this->dbConnection->commit();
 
-            $localData = $this->weatherLocalDataSource->getWeather($filter);
-
-            if (!$localData) {
+            $averageWeather = $this->weatherLocalDataSource->getWeatherAverage($filter);
+            if (empty($averageWeather)) {
                 throw new WeatherForecastDataNotFound();
             }
 
-            return $localData;
+            return $averageWeather;
         } catch (Throwable $t) {
             if ($this->dbConnection->isTransactionActive()) {
                 $this->dbConnection->rollBack();

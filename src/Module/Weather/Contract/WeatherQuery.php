@@ -16,4 +16,11 @@ interface WeatherQuery
      * @throws CountryNameMustNotBeEmpty
      */
     public function getWeather(WeatherForecastFilter $filter): ?WeatherForecastData;
+
+    /**
+     * @throws WeatherForecastFetchFailure
+     * @throws CityNameMustNotBeEmpty
+     * @throws CountryNameMustNotBeEmpty
+     */
+    public function getWeatherAverage(WeatherForecastFilter $filter): ?WeatherForecastData;
 }

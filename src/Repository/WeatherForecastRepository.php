@@ -6,6 +6,7 @@ use App\Entity\WeatherForecast;
 use App\Module\Weather\Filter\WeatherForecastFilter;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -28,6 +29,25 @@ class WeatherForecastRepository extends ServiceEntityRepository
      */
     public function findOneByFilter(WeatherForecastFilter $filter): ?WeatherForecast
     {
+        $queryBuilder = $this->basicFilterQueryBuilder($filter);
+
+        $queryBuilder
+            ->orderBy('w.id', 'desc')
+            ->setMaxResults(1);
+
+        return $queryBuilder
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function findAllByFilter(WeatherForecastFilter $filter): array
+    {
+        $queryBuilder = $this->basicFilterQueryBuilder($filter);
+        return $queryBuilder->getQuery()->getArrayResult();
+    }
+
+    private function basicFilterQueryBuilder(WeatherForecastFilter $filter): QueryBuilder
+    {
         $queryBuilder = $this->createQueryBuilder('w');
 
         if ($filter->createdAt) {
@@ -49,12 +69,6 @@ class WeatherForecastRepository extends ServiceEntityRepository
                 ->setParameter('city', $filter->city->value);
         }
 
-        $queryBuilder
-            ->orderBy('w.id', 'desc')
-            ->setMaxResults(1);
-
-        return $queryBuilder
-            ->getQuery()
-            ->getOneOrNullResult();
+        return $queryBuilder;
     }
 }
