@@ -39,10 +39,7 @@ class WeatherController extends AbstractController
                         country: new Country($weatherForecastEntity->getCountry()),
                         createdAt: new \DateTimeImmutable(),
                     ),
-                    [
-                        'app.weather.query.adapter.open_weather_api',
-                        'app.weather.query.adapter.dummy',
-                    ],
+                    $this->getParameter('weather')['external_sources'],
                 );
 
                 return $this->render('weather/results.html.twig', [

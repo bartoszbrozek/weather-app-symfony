@@ -43,6 +43,7 @@ class WeatherForecastRepository extends ServiceEntityRepository
     public function findAllByFilter(WeatherForecastFilter $filter): array
     {
         $queryBuilder = $this->basicFilterQueryBuilder($filter);
+
         return $queryBuilder->getQuery()->getArrayResult();
     }
 
