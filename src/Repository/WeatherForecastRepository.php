@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\WeatherForecast;
 use App\Module\Weather\Filter\WeatherForecastFilter;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Cache\Cache;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -69,6 +70,11 @@ class WeatherForecastRepository extends ServiceEntityRepository
                 ->andWhere('w.city = :city')
                 ->setParameter('city', $filter->city->value);
         }
+
+        $queryBuilder
+            ->setCacheMode(\Doctrine\ORM\Cache::MODE_NORMAL)
+            ->setCacheable(true)
+            ->setLifetime(3600);
 
         return $queryBuilder;
     }
