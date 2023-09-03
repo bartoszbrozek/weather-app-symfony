@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Module\Weather\Filter;
+namespace App\Command;
 
 use App\Application\Facade\HandleWeatherForecastData;
+use App\Module\Weather\Filter\WeatherForecastFilter;
 use App\Module\Weather\ValueObject\City;
 use App\Module\Weather\ValueObject\Country;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -40,8 +41,7 @@ class FetchWeatherDataCommand extends Command
             );
 
             return Command::SUCCESS;
-        } catch (\Throwable $t) {
-            dd($t);
+        } catch (\Throwable) {
             return Command::INVALID;
         }
     }

@@ -5,6 +5,8 @@ namespace App\Application\Facade;
 use App\Kernel;
 use App\Module\Weather\Contract\WeatherQuery;
 use App\Module\Weather\Contract\WeatherService;
+use App\Module\Weather\DTO\WeatherForecastData;
+use App\Module\Weather\Exception\WeatherForecastDataNotFound;
 use App\Module\Weather\Filter\WeatherForecastFilter;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
@@ -31,16 +33,15 @@ final readonly class HandleWeatherForecastData
     /**
      * @param WeatherForecastFilter $filter
      * @param array $weatherExternalDataSources
-     * @return void
+     * @return WeatherForecastData
      * @throws Exception
      * @throws Throwable
      */
-    public function handle(WeatherForecastFilter $filter, array $weatherExternalDataSources): void
+    public function handle(WeatherForecastFilter $filter, array $weatherExternalDataSources): WeatherForecastData
     {
         try {
             $this->dbConnection->setNestTransactionsWithSavepoints(true);
             $this->dbConnection->beginTransaction();
-
             $localData = $this->weatherLocalDataSource->getWeather($filter);
 
             if (!$localData) {
@@ -51,11 +52,21 @@ final readonly class HandleWeatherForecastData
                     $data = $weatherQuery->getWeather($filter);
                     $this->weatherService->storeWeatherForecast($data);
                 }
+
+            }
+            $this->dbConnection->commit();
+
+            $localData = $this->weatherLocalDataSource->getWeather($filter);
+
+            if (!$localData) {
+                throw new WeatherForecastDataNotFound();
             }
 
-            $this->dbConnection->commit();
+            return $localData;
         } catch (Throwable $t) {
-            $this->dbConnection->rollBack();
+            if ($this->dbConnection->isTransactionActive()) {
+                $this->dbConnection->rollBack();
+            }
 
             throw $t;
         }

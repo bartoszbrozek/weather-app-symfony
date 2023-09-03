@@ -1,0 +1,14 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+    <h2>Weather App - Results</h2>
+
+    <h3>Country</h3>
+    <p>{{ results.country.value }}</p>
+
+    <h3>City</h3>
+    {{ results.city.value }}
+
+    <h3>Average Temperature</h3>
+    {{ results.temperature }}
+{% endblock %}

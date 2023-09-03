@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\WeatherForecastRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: WeatherForecastRepository::class)]
 class WeatherForecast
@@ -14,9 +15,11 @@ class WeatherForecast
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
     private ?string $country = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
     private ?string $city = null;
 
     #[ORM\Column]
