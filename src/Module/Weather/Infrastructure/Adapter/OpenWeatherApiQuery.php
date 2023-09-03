@@ -24,7 +24,11 @@ final readonly class OpenWeatherApiQuery implements WeatherQuery
     public function getWeather(WeatherForecastFilter $filter): WeatherForecastData
     {
         try {
-            $weather = $this->client()->getWeather($filter->city->value, 'metric', 'en');
+            $weather = $this->client()->getWeather(
+                sprintf('%s,%s', $filter->city->value, $filter->country->value),
+                'metric',
+                'en',
+            );
 
             return new WeatherForecastData(
                 dateTime: new DateTimeImmutable(),
